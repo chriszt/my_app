@@ -1,0 +1,59 @@
+*** b6c53aba-9669-4668-a7f2-205629d00f89.ta
+*** TA_CreateEntryPoint()
+*** TA_OpenSessionEntryPoint()
+*** TA_InvokeCommandEntryPoint()
+*** enc()
+*** do_cipher()
+dst=0x0, size=0
+1. Allocate operation handle
+2. Allocate transient object handle
+3. Initial attribute
+4. attributes -> object handle
+5. object handle -> operation handle
+6. IV -> operation handle
+7. Do Cihper
+TEE_CipherUpdate() failed. Short Buffer, need dst_size=64
+*** TA_InvokeCommandEntryPoint()
+*** enc()
+*** do_cipher()
+dst=0x40014310, size=64
+1. Allocate operation handle
+2. Allocate transient object handle
+3. Initial attribute
+4. attributes -> object handle
+5. object handle -> operation handle
+6. IV -> operation handle
+7. Do Cihper
+dst=0x40014310, size=64
+*** ok ***
+*** TA_InvokeCommandEntryPoint()
+*** dec()
+*** do_cipher()
+dst=0x0, size=0
+1. Allocate operation handle
+2. Allocate transient object handle
+3. Initial attribute
+4. attributes -> object handle
+5. object handle -> operation handle
+6. IV -> operation handle
+7. Do Cihper
+TEE_CipherUpdate() failed. Short Buffer, need dst_size=64
+*** TA_InvokeCommandEntryPoint()
+*** dec()
+*** do_cipher()
+dst=0x40014360, size=64
+1. Allocate operation handle
+2. Allocate transient object handle
+3. Initial attribute
+4. attributes -> object handle
+5. object handle -> operation handle
+6. IV -> operation handle
+7. Do Cihper
+dst=0x40014360, size=64
+*** ok ***
+D/TC:? 0 tee_ta_close_session:499 csess 0xe17c850 id 1
+D/TC:? 0 tee_ta_close_session:518 Destroy session
+*** TA_CloseSessionEntryPoint()
+*** TA_DestroyEntryPoint()
+D/TC:? 0 destroy_context:298 Destroy TA ctx (0xe17c7f0)
+

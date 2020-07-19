@@ -1,0 +1,10 @@
+#ifndef __MY_DIGEST_TA_H__
+#define __MY_DIGEST_TA_H__
+
+#define MY_DIGEST_UUID \
+	{ 0xb6c53aba, 0x9669, 0x4668, \
+		{ 0xa7, 0xf2, 0x20, 0x56, 0x29, 0xd0, 0x0f, 0x88} }
+
+#define CMD_DIGEST      0
+
+#endif

@@ -1,0 +1,28 @@
+*** b6c53aba-9669-4668-a7f2-205629d00f88.ta
+*** TA_CreateEntryPoint()
+*** TA_OpenSessionEntryPoint()
+*** TA_InvokeCommandEntryPoint()
+cmd_id=0
+exp_pts=0x65, pts=0x65
+msg(0x40015290)=This is a test!!!
+msg size=17
+hash=0x400142b0, hash_size=1
+*** ok1 ***
+*** ok2 ***
+need realloc hash_size=64
+*** ok3 ***
+*** TA_InvokeCommandEntryPoint()
+cmd_id=0
+exp_pts=0x65, pts=0x65
+msg(0x40015260)=This is a test!!!
+msg size=17
+hash=0x40014320, hash_size=64
+*** ok1 ***
+*** ok2 ***
+*** ok3 ***
+D/TC:? 0 tee_ta_close_session:499 csess 0xe17c850 id 1
+D/TC:? 0 tee_ta_close_session:518 Destroy session
+*** TA_CloseSessionEntryPoint()
+*** TA_DestroyEntryPoint()
+D/TC:? 0 destroy_context:298 Destroy TA ctx (0xe17c7f0)
+

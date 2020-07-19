@@ -1,0 +1,38 @@
+res = TEE_DigestDoFinal(op, NULL, 0, hash, &hash_size);  // hash=NULL, hash_size=0
+
+*** b6c53aba-9669-4668-a7f2-205629d00f88.ta
+*** TA_CreateEntryPoint()
+*** TA_OpenSessionEntryPoint()
+*** TA_InvokeCommandEntryPoint()
+cmd_id=0
+exp_pts=0x65, pts=0x65
+msg(0x40014270)=This is a test!!!
+msg size=17
+hash=0x0, hash_size=0
+*** ok1 ***
+*** ok2 ***
+E/TC:? 0 
+E/TC:? 0 TA panicked with code 0xffff0006
+E/LD:  Status of TA b6c53aba-9669-4668-a7f2-205629d00f88
+E/LD:   arch: aarch64
+E/LD:  region  0: va 0x40004000 pa 0x0e300000 size 0x002000 flags rw-s (ldelf)
+E/LD:  region  1: va 0x40006000 pa 0x0e302000 size 0x008000 flags r-xs (ldelf)
+E/LD:  region  2: va 0x4000e000 pa 0x0e30a000 size 0x001000 flags rw-s (ldelf)
+E/LD:  region  3: va 0x4000f000 pa 0x0e30b000 size 0x003000 flags rw-s (ldelf)
+E/LD:  region  4: va 0x40012000 pa 0x0e30e000 size 0x001000 flags r--s
+E/LD:  region  5: va 0x40013000 pa 0x0e32b000 size 0x001000 flags rw-s (stack)
+E/LD:  region  6: va 0x40014000 pa 0xa8bb7270 size 0x001000 flags rw-- (param)
+E/LD:  region  7: va 0x40078000 pa 0x00001000 size 0x010000 flags r-xs [0]
+E/LD:  region  8: va 0x40088000 pa 0x00011000 size 0x00c000 flags rw-s [0]
+E/LD:   [0] b6c53aba-9669-4668-a7f2-205629d00f88 @ 0x40078000
+E/LD:  Call stack:
+E/LD:   0x0000000040079974
+E/LD:   0x00000000400783ac
+E/LD:   0x000000004007b754
+E/LD:   0x0000000040078410
+E/LD:   0xfffffffffffffffc
+D/TC:? 0 user_ta_enter:167 tee_user_ta_enter: TA panicked with code 0xffff0006
+D/TC:? 0 destroy_ta_ctx_from_session:313 Remove references to context (0xe17c7f0)
+D/TC:? 0 destroy_context:298 Destroy TA ctx (0xe17c7f0)
+D/TC:? 0 tee_ta_close_session:499 csess 0xe17c850 id 1
+D/TC:? 0 tee_ta_close_session:518 Destroy session

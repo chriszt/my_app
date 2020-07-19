@@ -1,0 +1,36 @@
+# my_aes 
+msg=Come On! You! You! check now,jian bing guo zi lai yi tao! yeah!
+addr:0xffffdf6052a0, size=64
+43 6f 6d 65 20 4f 6e 21 
+20 59 6f 75 21 20 59 6f 
+75 21 20 63 68 65 63 6b 
+20 6e 6f 77 2c 6a 69 61 
+6e 20 62 69 6e 67 20 67 
+75 6f 20 7a 69 20 6c 61 
+69 20 79 69 20 74 61 6f 
+21 20 79 65 61 68 21 00 
+
+enc_buf_size=64
+addr:0x64ae270, size=64
+65 ce 04 d4 19 e1 e0 b9 
+3c 4a 7b c0 49 01 87 21 
+f2 ee 0f f3 e5 cd 23 0a 
+16 ae 6e 98 ad fa 7a 0d 
+fb f3 11 94 f6 e5 45 e5 
+f3 da 53 56 7d fb 45 39 
+21 6a 0c e8 5c f3 40 f0 
+a6 f0 53 b9 22 e6 7e 6f 
+
+dec_buf_size=64
+addr:0x64ae310, size=64
+43 6f 6d 65 20 4f 6e 21 
+20 59 6f 75 21 20 59 6f 
+75 21 20 63 68 65 63 6b 
+20 6e 6f 77 2c 6a 69 61 
+6e 20 62 69 6e 67 20 67 
+75 6f 20 7a 69 20 6c 61 
+69 20 79 69 20 74 61 6f 
+21 20 79 65 61 68 21 00 
+
+dec_buf=Come On! You! You! check now,jian bing guo zi lai yi tao! yeah!
+# 
