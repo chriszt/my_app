@@ -40,7 +40,6 @@ int main (void)
     TEEC_UUID uuid = MY_AES_UUID;
     TEEC_Result res;
     uint32_t org;
-    uint32_t i;
 
     char msg[] = "Come On! You! You! check now,jian bing guo zi lai yi tao! yeah!";  // sizeof(msg) = 64
     uint8_t *enc_buf = NULL;
@@ -49,7 +48,7 @@ int main (void)
     uint32_t dec_buf_size = 0;
 
     printf("msg=%s\n", msg);
-    print_mem(msg, sizeof(msg));
+    print_mem((uint8_t *)msg, sizeof(msg));
 
     res = TEEC_InitializeContext(NULL, &ctx);
     if (res) {
@@ -137,7 +136,6 @@ int main (void)
     printf("dec_buf=%s\n", dec_buf);
 
 
-L5:
     free(dec_buf);
     dec_buf = NULL;
 L4:

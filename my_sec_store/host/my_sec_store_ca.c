@@ -14,8 +14,6 @@ int main (void)
     TEEC_UUID uuid = TA_MY_SEC_STORE_UUID;
     uint32_t origin = 0;
 
-    long x = 5, y = 2, r = 0;
-
     ret = TEEC_InitializeContext(NULL, &ctx);
     if (ret) {
         fprintf(stderr, "TEEC_InitializeContext failed with code 0x%x\n", ret);

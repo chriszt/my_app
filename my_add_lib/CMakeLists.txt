@@ -3,7 +3,9 @@ project (my_add_lib C)
 set (SRC host/my_add_lib_ca.c)
 
 # Add by YL
-link_directories(../../out-br/target/usr/lib)
+# ../../out-br/target/usr/lib
+# /home/yl/qemu_v8/out-br/target/usr/lib
+link_directories(/home/yl/qemu_v8/out-br/target/usr/lib)
 
 add_executable (${PROJECT_NAME} ${SRC})
 

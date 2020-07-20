@@ -61,6 +61,7 @@ TEE_Result test (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS])
                                               TEE_PARAM_TYPE_NONE,
                                               TEE_PARAM_TYPE_NONE);
     DMSG("+++");
+    (void) params;
     
     if (paramTypes != exp_paramTypes) {
         EMSG("Bad Parameters");
