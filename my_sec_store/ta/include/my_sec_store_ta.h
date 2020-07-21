@@ -8,6 +8,9 @@
 #define TA_CMD_CREATE          1
 #define TA_CMD_WRITE           2
 #define TA_CMD_READ            3
+#define TA_CMD_RENAME          4
+#define TA_CMD_TRUNCATE        5
+#define TA_CMD_DELETE          6
 
 #endif
 

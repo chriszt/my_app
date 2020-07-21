@@ -11,6 +11,9 @@ TEE_Result test (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
 TEE_Result create (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
 TEE_Result write (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
 TEE_Result read (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
+TEE_Result rename (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
+TEE_Result truncate (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
+TEE_Result delete (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS]);
 
 TEE_Result TA_CreateEntryPoint (void)
 {
@@ -291,6 +294,160 @@ L1:
     return ret;
 }
 
+TEE_Result rename (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS])
+{
+    TEE_Result ret = TEE_SUCCESS;
+    TEE_ObjectHandle po = TEE_HANDLE_NULL;
+    char *file_name_tmp = NULL;
+    uint32_t file_name_size = 0;
+    char *new_file_name_tmp = NULL;
+    char new_file_name[FILE_NAME_BUF_SIZE] = {0};
+    uint32_t new_file_name_size = 0;
+    uint32_t exp_paramTypes = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_INPUT,
+                                              TEE_PARAM_TYPE_MEMREF_INPUT,
+                                              TEE_PARAM_TYPE_NONE,
+                                              TEE_PARAM_TYPE_NONE);
+    DMSG("+++");
+
+    if (paramTypes != exp_paramTypes) {
+        EMSG("Bad Parameters");
+        ret = TEE_ERROR_BAD_PARAMETERS;
+        goto L1;
+    }
+
+    file_name_tmp = params[0].memref.buffer;
+    file_name_size = params[0].memref.size;
+    new_file_name_tmp = params[1].memref.buffer;
+    new_file_name_size = params[1].memref.size;
+
+    IMSG("file_name_tmp=%s", file_name_tmp);
+    IMSG("file_name_size=%u", file_name_size);
+    IMSG("new_file_name_tmp=%s", new_file_name_tmp);
+    IMSG("new_file_name_size=%u", new_file_name_size);
+
+    ret = open(file_name_tmp, file_name_size,
+               TEE_DATA_FLAG_ACCESS_WRITE | TEE_DATA_FLAG_ACCESS_WRITE_META,
+               &po);
+    if (ret) {
+        EMSG("Open %s failed, code=0x%x", file_name_tmp, ret);
+        goto L1;
+    }
+    IMSG("Open %s Success:)", file_name_tmp);
+
+    /*
+     * [GP 5.7.5] TEE_RenamePersistentObject(...)
+     * newObjectID, newObjectIDLen : The buffer containing the new object identifier cannot reside in shared memory.
+     */
+    TEE_MemMove(new_file_name, new_file_name_tmp, new_file_name_size);
+    ret = TEE_RenamePersistentObject(po, new_file_name, new_file_name_size);
+    if (ret) {
+        EMSG("Rename failed, code=0x%x", ret);
+        goto L2;
+    }
+    IMSG("Rename Success:)");
+
+L2:
+    TEE_CloseObject(po);
+L1:
+    DMSG("---");
+    return ret;
+}
+
+TEE_Result truncate (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS])
+{
+    TEE_Result ret = TEE_SUCCESS;
+    TEE_ObjectHandle po = TEE_HANDLE_NULL;
+    char *file_name_tmp = NULL;
+    uint32_t file_name_size = 0;
+    uint32_t new_size = 0;
+    uint32_t exp_paramTypes = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_INPUT,
+                                              TEE_PARAM_TYPE_VALUE_INPUT,
+                                              TEE_PARAM_TYPE_NONE,
+                                              TEE_PARAM_TYPE_NONE);
+    DMSG("+++");
+
+    if (paramTypes != exp_paramTypes) {
+        EMSG("Bad Parameters");
+        ret = TEE_ERROR_BAD_PARAMETERS;
+        goto L1;
+    }
+
+    file_name_tmp = params[0].memref.buffer;
+    file_name_size = params[0].memref.size;
+    new_size = params[1].value.a;
+
+    IMSG("file_name_tmp=%s", file_name_tmp);
+    IMSG("file_name_size=%u", file_name_size);
+    IMSG("truncate to %u(Bytes)", new_size);
+
+    ret = open(file_name_tmp, file_name_size,
+               TEE_DATA_FLAG_ACCESS_WRITE | TEE_DATA_FLAG_ACCESS_WRITE_META,
+               &po);
+    if (ret) {
+        EMSG("Open %s failed, code=0x%x", file_name_tmp, ret);
+        goto L1;
+    }
+    IMSG("Open %s Success:)", file_name_tmp);
+
+    ret = TEE_TruncateObjectData(po, new_size);
+    if (ret) {
+        EMSG("Truncate failed, code=0x%x", ret);
+        goto L2;
+    }
+    IMSG("Truncate Success:)");
+
+L2:
+    TEE_CloseObject(po);
+L1:
+    DMSG("---");
+    return ret;
+}
+
+TEE_Result delete (uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS])
+{
+    TEE_Result ret = TEE_SUCCESS;
+    TEE_ObjectHandle po = TEE_HANDLE_NULL;
+    char *file_name_tmp = NULL;
+    uint32_t file_name_size = 0;
+    uint32_t exp_paramTypes = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_INPUT,
+                                              TEE_PARAM_TYPE_NONE,
+                                              TEE_PARAM_TYPE_NONE,
+                                              TEE_PARAM_TYPE_NONE);
+    DMSG("+++");
+
+    if (paramTypes != exp_paramTypes) {
+        EMSG("Bad Parameters");
+        ret = TEE_ERROR_BAD_PARAMETERS;
+        goto L1;
+    }
+
+    file_name_tmp = params[0].memref.buffer;
+    file_name_size = params[0].memref.size;
+
+    IMSG("file_name_tmp=%s", file_name_tmp);
+    IMSG("file_name_size=%u", file_name_size);
+
+    ret = open(file_name_tmp, file_name_size,
+               TEE_DATA_FLAG_ACCESS_WRITE | TEE_DATA_FLAG_ACCESS_WRITE_META,
+               &po);
+    if (ret) {
+        EMSG("Open %s failed, code=0x%x", file_name_tmp, ret);
+        goto L1;
+    }
+    IMSG("Open %s Success:)", file_name_tmp);
+
+    ret = TEE_CloseAndDeletePersistentObject1(po);
+    if (ret) {
+        EMSG("Delete failed, code=0x%x", ret);
+        goto L1;
+    }
+    IMSG("Delete Success:)");
+
+L1:
+    DMSG("---");
+    return ret;
+}
+
 TEE_Result TA_InvokeCommandEntryPoint (void *sessCtx, uint32_t cmdID,
     uint32_t paramTypes, TEE_Param params[TEE_NUM_PARAMS])
 {
@@ -311,6 +468,15 @@ TEE_Result TA_InvokeCommandEntryPoint (void *sessCtx, uint32_t cmdID,
         break;
     case TA_CMD_READ:
         ret = read(paramTypes, params);
+        break;
+    case TA_CMD_RENAME:
+        ret = rename(paramTypes, params);
+        break;
+    case TA_CMD_TRUNCATE:
+        ret = truncate(paramTypes, params);
+        break;
+    case TA_CMD_DELETE:
+        ret = delete(paramTypes, params);
         break;
     default:
         ret = TEE_ERROR_BAD_PARAMETERS;
