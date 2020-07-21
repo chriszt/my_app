@@ -33,10 +33,21 @@ TEE_Result do_cipher (TEE_OperationMode op_mode, void *sess_ctx,
 
 TEE_Result TA_CreateEntryPoint (void)
 {
-    printf("*** b6c53aba-9669-4668-a7f2-205629d00f89.ta\n");
-    printf("*** %s()\n", __func__);
-    
+    DMSG("+++");
+
+    // TODO
+
+    DMSG("---");
     return TEE_SUCCESS;
+}
+
+void TA_DestroyEntryPoint (void)
+{
+    DMSG("+++");
+
+    // TODO
+
+    DMSG("---");
 }
 
 TEE_Result TA_OpenSessionEntryPoint (uint32_t pts, 
@@ -46,9 +57,23 @@ TEE_Result TA_OpenSessionEntryPoint (uint32_t pts,
     (void) params;
     (void) sess_ctx;
 
-    printf("*** %s()\n", __func__);
-    
+    DMSG("+++");
+
+    // TODO
+
+    DMSG("---");
     return TEE_SUCCESS;
+}
+
+void TA_CloseSessionEntryPoint (void *sess_ctx)
+{
+    (void) sess_ctx;
+    
+    DMSG("+++");
+
+    // TODO
+
+    DMSG("---");
 }
 
 void print_mem (uint8_t *mem, uint32_t mem_size)
@@ -56,33 +81,35 @@ void print_mem (uint8_t *mem, uint32_t mem_size)
     uint32_t i;
 
     if (mem == NULL || mem_size == 0) {
-        printf("Bad Parameters\n");       
+        EMSG("Bad Parameters");
         return;
     }
     
-    printf("addr:%p, size=%u\n", mem, mem_size);
+    IMSG("addr:%p, size=%u", mem, mem_size);
 
     for (i = 0; i < mem_size; ++i) {
-        printf("%02x ", mem[i]);
+        IMSG("%02x ", mem[i]);
         if ((i+1) % 8 == 0) {
-            printf("\n");
+            IMSG("\n");
         }
     }
-    printf("\n");
-
+    IMSG("\n");
 }
 
 TEE_Result enc (void *sess_ctx, uint32_t pts, TEE_Param *params)
 {
-    printf("*** %s()\n", __func__);
+    TEE_Result ret = TEE_SUCCESS;
 
+    DMSG("+++");
+
+    ret = 
+
+    DMSG("---");
     return do_cipher(TEE_MODE_ENCRYPT, sess_ctx, pts, params);
 }
 
 TEE_Result dec (void *sess_ctx, uint32_t pts, TEE_Param *params)
 {
-    printf("*** %s()\n", __func__);
-
     return do_cipher(TEE_MODE_DECRYPT, sess_ctx, pts, params);
 }
 
@@ -103,11 +130,11 @@ TEE_Result do_cipher (TEE_OperationMode op_mode, void *sess_ctx,
                                        TEE_PARAM_TYPE_NONE,
                                        TEE_PARAM_TYPE_NONE);
     
-    printf("*** %s()\n", __func__);
+    DMSG("+++");
 
     if (exp_pts != pts) {
+        EMSG("Bad Parameters.");
         res = TEE_ERROR_BAD_PARAMETERS;
-        printf("Bad Parameters. code=0x%x.\n", res);
         goto L1;
     }
 
@@ -118,52 +145,50 @@ TEE_Result do_cipher (TEE_OperationMode op_mode, void *sess_ctx,
     dst = params[1].memref.buffer;
     dst_size = params[1].memref.size;
 
-    printf("dst=%p, size=%u\n", dst, dst_size);
+    IMSG("dst=%p, size=%u\n", dst, dst_size);
 
-    printf("1. Allocate operation handle\n");
+    IMSG("1. Allocate operation handle\n");
     res = TEE_AllocateOperation(&oper_hnd, TEE_ALG_AES_CBC_NOPAD, op_mode, g_AES_128_KEY_SIZE);
     if (res) {
-        printf("TEE_AllocateOperation() failed. code=0x%x\n", res);
+        EMSG("TEE_AllocateOperation() failed. code=0x%x\n", res);
         goto L1;
     }
 
-    printf("2. Allocate transient object handle\n");
+    IMSG("2. Allocate transient object handle\n");
     res = TEE_AllocateTransientObject(TEE_TYPE_AES, g_AES_128_KEY_SIZE, &key_hnd);
     if (res) {
-        printf("TEE_AllocateOperation() failed. code=0x%x\n", res);
+        EMSG("TEE_AllocateOperation() failed. code=0x%x\n", res);
         goto L2;
     }
 
-    printf("3. Initial attribute\n");
+    IMSG("3. Initial attribute\n");
     TEE_InitRefAttribute(&attr, TEE_ATTR_SECRET_VALUE, g_AES_128_KEY, g_AES_128_KEY_SIZE/8);
     
-    printf("4. attributes -> object handle\n");
+    IMSG("4. attributes -> object handle\n");
     res = TEE_PopulateTransientObject(key_hnd, &attr, 1);
     if (res) {
-        printf("TEE_PopulateTransientObject() failed. code=0x%x\n", res);
+        EMSG("TEE_PopulateTransientObject() failed. code=0x%x\n", res);
         goto L3;
     }
 
-    printf("5. object handle -> operation handle\n");
+    IMSG("5. object handle -> operation handle\n");
     res = TEE_SetOperationKey(oper_hnd, key_hnd);
     if (res) {
-        printf("TEE_SetOperationKey() failed. code=0x%x\n", res);
+        EMSG("TEE_SetOperationKey() failed. code=0x%x\n", res);
         goto L3;
     }
 
-    printf("6. IV -> operation handle\n");
+    IMSG("6. IV -> operation handle\n");
     TEE_CipherInit(oper_hnd, g_AES_128_IV, g_AES_128_KEY_SIZE/8);
 
-    printf("7. Do Cihper\n");
+    IMSG("7. Do Cihper");
     res = TEE_CipherUpdate(oper_hnd, src, src_size, dst, &dst_size);
     if (res == TEE_ERROR_SHORT_BUFFER) {
-        printf("TEE_CipherUpdate() failed. Short Buffer, need dst_size=%u\n", dst_size);
+        EMSG("TEE_CipherUpdate() failed. Short Buffer, need dst_size=%u\n", dst_size);
         params[1].memref.size = dst_size;
         goto L3;
     }
-    printf("dst=%p, size=%u\n", dst, dst_size);
-
-    printf("*** ok ***\n");
+    IMSG("dst=%p, size=%u", dst, dst_size);
 
 L3:
     TEE_FreeTransientObject(key_hnd);
@@ -172,6 +197,7 @@ L2:
     TEE_FreeOperation(oper_hnd);
     oper_hnd = TEE_HANDLE_NULL;
 L1:
+    DMSG("---");
     return res;
 }
 
@@ -192,13 +218,6 @@ TEE_Result TA_InvokeCommandEntryPoint (void *sess_ctx, uint32_t cmd_id,
     }
 }
 
-void TA_CloseSessionEntryPoint (void *sess_ctx)
-{
-    (void) sess_ctx;
-    printf("*** %s()\n", __func__);
-}
 
-void TA_DestroyEntryPoint (void)
-{
-    printf("*** %s()\n", __func__);
-}
+
+
