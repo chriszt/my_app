@@ -98,13 +98,6 @@ void print_mem (uint8_t *mem, uint32_t mem_size)
 
 TEE_Result enc (void *sess_ctx, uint32_t pts, TEE_Param *params)
 {
-    TEE_Result ret = TEE_SUCCESS;
-
-    DMSG("+++");
-
-    ret = 
-
-    DMSG("---");
     return do_cipher(TEE_MODE_ENCRYPT, sess_ctx, pts, params);
 }
 
@@ -206,7 +199,7 @@ L1:
 TEE_Result TA_InvokeCommandEntryPoint (void *sess_ctx, uint32_t cmd_id,
         uint32_t pts, TEE_Param params[TEE_NUM_PARAMS])
 {
-    printf("*** %s()\n", __func__);
+    DMSG("+++");
 
     switch (cmd_id) {
     case CMD_ENC:
